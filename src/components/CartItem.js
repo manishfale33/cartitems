@@ -1,7 +1,8 @@
 import React from 'react';
-import { FaTrash, FaSave } from 'react-icons/fa'; // Import the trash and save icons
+import PropTypes from 'prop-types';
+import { FaTrash, FaSave, FaArrowLeft } from 'react-icons/fa'; // Import FaArrowLeft
 
-const CartItem = ({ item, onRemoveClick, onSaveLaterClick }) => {
+const CartItem = ({ item, onRemoveClick, onSaveLaterClick, onMoveBackToCart, showMoveBackToCart }) => {
   return (
     <div className="border p-2 m-2 flex items-center">
       <img
@@ -14,7 +15,7 @@ const CartItem = ({ item, onRemoveClick, onSaveLaterClick }) => {
         <p className="text-gray-700">{item.description}</p>
         <p className="text-red-500 font-semibold">${item.price}</p>
       </div>
-      <div className="flex flex-col"> {/* Wrap buttons in a flex container */}
+      <div className="flex flex-col">
         <div>
           <button
             onClick={() => onRemoveClick(item.id)}
@@ -25,18 +26,35 @@ const CartItem = ({ item, onRemoveClick, onSaveLaterClick }) => {
           </button>
         </div>
         <div>
-          <button
-            onClick={() => onSaveLaterClick(item.id)}
-            className="text-green-500 font-semibold hover:text-green-700"
-          >
-            <FaSave className="inline-block" />
-            Save Later
-          </button>
+          {!showMoveBackToCart ? ( // Hide "Save Later" button if showMoveBackToCart is true
+            <button
+              onClick={() => onSaveLaterClick(item.id)}
+              className="text-green-500 font-semibold hover:text-green-700"
+            >
+              <FaSave className="inline-block" />
+              Save Later
+            </button>
+          ) : (
+            <button
+              onClick={() => onMoveBackToCart(item.id)}
+              className="text-blue-500 font-semibold hover:text-blue-700"
+            >
+              <FaArrowLeft className="inline-block" /> {/* Add FaArrowLeft icon */}
+              Back to Cart
+            </button>
+          )}
         </div>
       </div>
-      {/* Add any additional elements for promotions and coupon code */}
     </div>
   );
+};
+
+CartItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  onRemoveClick: PropTypes.func.isRequired,
+  onSaveLaterClick: PropTypes.func.isRequired,
+  onMoveBackToCart: PropTypes.func.isRequired,
+  showMoveBackToCart: PropTypes.bool, // This prop is optional
 };
 
 export default CartItem;
